@@ -1,0 +1,104 @@
+-------------------------------------------------------------------------------
+   versioning of jsbach input files
+-------------------------------------------------------------------------------
+
+   /pool/data/JSBACH/<res>              - latest file versions
+   /pool/data/JSBACH/input/<rev>/<res>  - files of revision <rev>
+
+  Included in the versioning are all files read by jsbach at run time, not
+  the files needed to generate jsbach initial files.
+
+  svn revisions refer to https://svn.zmaw.de/svn/cosmos/branches/cosmos-landveg
+                   or    https://svn.zmaw.de/svn/cosmos/branches/mpiesm-landveg
+
+                                                Veronika Gayler, February 2014
+-------------------------------------------------------------------------------
+
+r0001 - 2014-02-07: copy of current files from pool/data/JSBACH.
+                    These files had been used for CMIP5 simulations.
+
+r0002 - 2014-02-07: removal of files that should not be used
+                    copied hdstart.nc from echam pool to r0002/HD
+
+r0003 - 2014-02-17: initial files generated with jsbach_init_file.f90 r6843
+                    changes:
+               - maxmoist (r6635): new correction of maximum soil moisture for
+                    runs with dynamic vegetation. T. Stacke and S. Hagemann 
+                    generated a wcap array with desert values replaced by semi 
+                    desert and shrubs values.
+               - maxmoist (r6834): minimum value of initial soil moisture is 
+                    50% of maxmoist
+               - veg_ratio_max (r6843): extrapolated to all non-glacier land
+                    grid cells. This changed the order of init file variables.
+
+               no new versions of initial files
+                  - with 1 layer soil (the 5layer files can be also used for
+                    runs with the old bucket scheme.)
+                  - for year 1992 based on land_cover_maps by J. Pongratz
+                  - for coupled setups with the ocean grid TP10
+                  - with 4, 8 or 12 tiles
+
+r0004 - 2014-04-25: initial files generated with jsbach_init_file.f90 r7052
+                    changes:
+               - fractional lake mask included (needed with HD model since r7052)
+               - nlct as global attribute (r6983)
+        2014-06-05: added initial files suitable for stand-alone jsbach 
+                    simulations with CRUNCEP forcing (without Antarctica)
+        2014-07-04: added initial files for new jsbach on T63GR15 and r2b4 icon
+                    grids (??_land_*_1976.nc)
+        2014-07-04: added input files needed for jsbach runs with spitfire
+
+r0005 - 2014-10-14: initial files generated with jsbach_init_file.f90 r7149
+                    changes:
+               - attribute 'axis=Z' for soillev dimension (r7149)
+               - svn URL and revision of jsbach_init_file.f90 in history 
+                    attribute of jsbach initial files (r7102)
+               - again removed jsbach initial files for ICON
+               no change in results
+
+r0006 - 2015-02-27: jsbach_init_file.f90 unchanged (r7149)
+               - added New Hampshire transitions and harvest files for the 
+                 years 1700 to 1850 (T31, T63, T127).
+               - added jsbach initial files for year 1700
+               - Change of 1850 transitions from zero transitions to real 
+                    transitions. Runscripts need to be adapted to use  
+                    no_transitions-file in the first years of a simulation
+
+r0007 - 2015-04-15: jsbach_init_file.f90 unchanged (r7149)
+               - update of HD parameter file hdpara.nc (based on hdpara_vs1_9.nc
+                 by Stefan Hagemann): hdpara.nc now includes longitude and
+                 latitude indices for routing via index arrays.
+                 The formerly used direction array and the land sea mask
+                 is slightly changed, too. This changes results!
+        2016-02-24: added jsbach4 initial files for CRUENCEP forcing
+        2016-08-30: New directory for historical LUH2 data
+        2016-10-06: added CMIP6 Ndeposition files in T63 and T31
+
+r0008 - 2017-02-03: initial files generated with jsbach_init_file.f90 r8974
+ 	            T127 and T255 only - used for MiKlip and PRIMAVERA
+                    changes:
+	       - usage of LUH2v2h data for cover_type and cover_fract
+	       - application of the pasture rule
+
+r0009 - 2017-03-29: initial files generated with jsbach_init_file.f90 r9011
+                    changes:
+	       - usage of LUH2v2h data for cover_type and cover_fract
+	         As LUH2-states are scaled with veg_ratio_max, jsbach-initial-
+	         files and LU-transitions are different for runs with and
+		 without dynamic vegetation.
+	       - land use maps corresponding to LUH2v2h data
+	       - application of the pasture rule
+	       - no-dynveg initial files for T127 and T255 are physically
+	         identical to r0008, but global attributes and file names sligtly
+		 changed
+               - contrast to previous revisions for runs without dynamic
+	         vegetation you need initial files and transitions with tag
+	         'no-dynveg', while for runs with dynamic vegetation tag 'dynveg'
+	         is needed.
+
+r0010 - 2017-09-13: initial files generated with jsbach_init_file.f90 r9230
+               - scaling of LUH2v2h states changed, to be more independant of
+                 the land sea mask, to work with various ocean model grids.
+                 This affects jsbach initial files, land_use_maps and 
+                 New_Hampshire_LCC land use transitions.
+               - new initial files for T127TP6M and T255TP6M
