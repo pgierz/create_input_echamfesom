@@ -1,7 +1,7 @@
-Scripts for generating ECHAM6 and JSBACH intial files and land/sea masks adapted to the FESOM ocean grid
+Scripts for generating ECHAM6 and JSBACH initial files and land/sea masks adapted to the FESOM ocean grid
 ======
 
-The scripts are based on the original scripts by Veronika Gayler (MPI-M). The parts relating to the MPIOM model were changed to support unstructured ocean grids as used by FESOM. The scripts use the cdo operator "remapycon" heavily, therefore CDO grid description files for the FESOM ocean grids are needed to produce the input files for ECHAM6 and JSBACH. These can be created with the spheRlab package, maintained by Helge Goessling (AWI). 
+The scripts are based on the original scripts by Veronika Gayler (MPI-M), copied from /pf/zmaw/m220053/mpiesm-1.2.01-release/contrib/initial_tarfiles as of November 2018. The parts relating to the MPIOM model were changed to support unstructured ocean grids as used by FESOM. The scripts use the cdo operator "remapycon" heavily, therefore CDO grid description files for the FESOM ocean grids are needed to produce the input files for ECHAM6 and JSBACH. These can be created with the spheRlab package (see below), maintained by Helge Goessling (AWI). 
 
 The FESOM model is developed and supported by researchers at the Alfred Wegener Institute, Helmholtz Centre for Polar and Marine Research (AWI), in Bremerhaven, Germany.
 
