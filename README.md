@@ -10,6 +10,12 @@ Documentation
 
 [Basic tutorial](/docs/README.md) TODO
 
+Load the following modules on Mistral @ DKRZ:
+
+module load cdo (loaded by default now)
+module load nco (for ncatted)
+module load nag (for the Fortran compiler nagfor)
+
 [Compute CDO grid description for a FESOM grid](https://gitlab.dkrz.de/FESOM/fesom2/blob/master/docs/convert_grid_to_nc.md)
 
 References
