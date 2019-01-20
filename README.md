@@ -8,22 +8,28 @@ The FESOM model is developed and supported by researchers at the Alfred Wegener 
 Documentation
 =============
 
-[Basic tutorial](/docs/README.md) TODO
+**Load the following modules on Mistral @ DKRZ:**
 
-Load the following modules on Mistral @ DKRZ:
+- module load cdo (loaded by default now)
+- module load nco (for ncatted)
+- module load nag (for the Fortran compiler nagfor)
 
-module load cdo (loaded by default now)
-module load nco (for ncatted)
-module load nag (for the Fortran compiler nagfor)
+[Basic tutorial](/docs/README.md) **TODO**
 
 [Compute CDO grid description for a FESOM grid](https://gitlab.dkrz.de/FESOM/fesom2/blob/master/docs/convert_grid_to_nc.md)
+
+To be added
+===========
+
+- Add optimized "slm_fractions" -other than 0.5- for every FESOM grid. Assuming that the FESOM land/sea distribution is the truth, the target land area should be close to the value implied by the ocean grid. We can add the values from the previous script that was not under version control.
 
 References
 ==========
 
 Details about why this is done and an example how an adapted land/sea mask will look like:
 
-* Rackow, T. (2014), An unstructured multi-resolution global climate model:coupling, mean state and climate variability, p.37ff and Fig. 2.1 in https://elib.suub.uni-bremen.de/edocs/00104415-1.pdf [click](https://elib.suub.uni-bremen.de/edocs/00104415-1.pdf)
+* Rackow, T. (2014), An unstructured multi-resolution global climate model:
+coupling, mean state and climate variability, p.37ff and Fig. 2.1 in https://elib.suub.uni-bremen.de/edocs/00104415-1.pdf [click](https://elib.suub.uni-bremen.de/edocs/00104415-1.pdf)
 
 Analysis of model runs with ECHAM-FESOM where the adaptation has been performed:
 
