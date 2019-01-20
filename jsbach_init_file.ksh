@@ -57,6 +57,22 @@ if [[ ${interactive} = true ]]; then
   pool=/pool/data/ECHAM6/input/r0006/${res_atm}   # directories with echam input data
   pool_land=/pool/data/JSBACH/prepare/${res_atm}
   srcdir=.
+else
+  #TR USE WHICH SETTINGS FOR ELSE CASE? CHECK WITH TIDO
+  pool=${wrkdir}/input/echam6
+  pool_land=/pool/data/JSBACH/prepare/${res_atm}/
+
+  #landcover_series=false  
+  #year_cf2=1859 # only used with landcover_series
+
+  #echam_fractional=false
+
+  #lpasture=true 
+  #read_pasture=LUH2v2h #LUH2v2h
+  #pasture_rule=true 
+
+  #dynveg=false 
+  #masks_file=default
 fi
 
 #------------------------------------------------------------------------------
