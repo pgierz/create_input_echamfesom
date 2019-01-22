@@ -21,7 +21,7 @@ Documentation
 To be added
 ===========
 
-- Add optimized "slm_fractions" -other than 0.5- for every FESOM grid. Assuming that the FESOM land/sea distribution is the truth, the target land area should be close to the value implied by the ocean grid. We can add the values from the previous script that was not under version control.
+- [x] Add optimized "slm_fractions" -other than 0.5- for every FESOM grid. Assuming that the FESOM land/sea distribution is the truth, the target land area should be close to the value implied by the ocean grid. We can add the values from the previous script that was not under version control.
 
 References
 ==========
