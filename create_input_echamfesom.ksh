@@ -266,8 +266,21 @@ if [[ "${atminp}" = "yes" ]]; then
         echo "         Are you sure you want to use the default (0.5)?"
         echo "------------------------------------------------------"
       fi
+      #compute integer land sea mask from "SLF", where SLF >= 0.5 (or slm_frac)
       cdo gec,${slm_fraction} -selvar,SLM ${CFILE} slm
+
+      # diagnose land fraction 
+      echo "------------------------------------------------------"
+      echo "SLM land fraction, MPI target 147 Mio km2:" 
+      cdo -s output -fldsum -mul slm -gridarea slm
+      echo "${res_oce} mesh land fraction, AWI target:" 
+      cdo -s output -sub -fldsum -gridarea -const,1,t63grid -fldsum -gridarea -const,1,${mesh_griddes} # total FESOM land
+      echo "SLM ocean fraction:" 
+      cdo -s output -fldsum -mul -mulc,-1 -subc,1 slm -gridarea slm
+      echo "------------------------------------------------------"
+
     fi
+    # change name of slm to slf in *_jan_surf.nc file
     cdo chname,SLM,SLF ${CFILE} ${CFILE}.tmp
     ncatted -a 'long_name','SLF',o,c,'fractional land sea mask' ${CFILE}.tmp
     mv ${CFILE}.tmp ${CFILE}
@@ -364,6 +377,12 @@ if [[ "${srfinp}" = "yes" ]]; then
   export pasture_rule=true 	# allocate pastures primarily on grass lands          
 
   ${srcdir}/jsbach_init_file.ksh
+
+  # ...same with no-dynveg
+  export dynveg=false
+
+  ${srcdir}/jsbach_init_file.ksh
+
   # ----------------------------------------
 
   ## cmip5-like initial file with own tile for glaciers
@@ -411,6 +430,11 @@ if [[ "${srfinp}" = "yes" ]]; then
   export cmip5_pasture=true
 
   ${srcdir}/jsbach_init_file.ksh
+
+  # ...same with no-dynveg
+  export dynveg=false
+
+  ${srcdir}/jsbach_init_file.ksh
   # ----------------------------------------
 
   # ----------------------------------------
@@ -420,6 +444,11 @@ if [[ "${srfinp}" = "yes" ]]; then
   export ntiles=11
   export c3c4crop=true
   export cmip5_pasture=false
+
+  ${srcdir}/jsbach_init_file.ksh
+
+  # ...same with no-dynveg
+  export dynveg=false
 
   ${srcdir}/jsbach_init_file.ksh
   # ----------------------------------------
