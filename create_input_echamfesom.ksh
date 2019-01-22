@@ -76,7 +76,7 @@ export pool_oce=/pool/data/MPIOM                 # pool with oce input data
 export pool_srf=/pool/data/JSBACH                # pool with srf input data
 [[ ${res_atm} = T255 ]] && export pool_srf=/work/im0454/JSBACH   # pool with srf input data
 #export pool_cpl=$WRKSHR/tarfiles           # pool for created input data
-export pool_cpl=${mesh_path}/tarfiles${res_atm}_gitlab		# pool for created input data
+export pool_cpl=${mesh_path}/tarfiles${res_atm}_pool		# pool for created input data
 
 # restart data
 #restart_mpiom=""
@@ -191,6 +191,75 @@ if [[ "${atminp}" = "yes" ]]; then
       [[ ${res_atm} = T127 && ${res_oce} = TP04 ]] && slm_fraction=0.57
       [[ ${res_atm} = T127 && ${res_oce} = TP10 ]] && slm_fraction=0.58
       [[ ${res_atm} = T159 && ${res_oce} = TP04 ]] && slm_fraction=0.59
+
+      # FESOM ocean grids; target is the land fraction implied by the ocean grid
+      [[ ${res_atm} = T127 && ${res_oce} = CORE2 ]] && slm_fraction=0.49 	# 0.48: SLM land frac 1.45555e+14;
+										# 0.49: SLM land frac 1.45317e+14;
+										# 0.50: SLM land frac 1.45088e+14; CORE2 land frac 1.4531e+14
+
+      [[ ${res_atm} = T63 && ${res_oce} = CORE2 ]] && slm_fraction=0.46 	# 0.46:	SLM land/oce frac 1.45449e+14/3.64616e+14 
+										# 0.47:	SLM land/oce frac 1.45145e+14/3.64919e+14
+										# 0.48: SLM land/oce frac 1.44630e+14/3.65435e+14
+										# 0.49: SLM land/oce frac 1.44363e+14/3.65702e+14
+										# 0.50: SLM land/oce frac 1.43986e+14/3.66079e+14; CORE2 land frac 1.4531e+14
+
+      [[ ${res_atm} = T63 && ${res_oce} = GLOB ]] && slm_fraction=0.47 		# 0.47: SLM land/oce frac 1.48175e+14/3.61889e+14
+										# 0.48: SLM land/oce frac 1.47768e+14/3.62296e+14
+										# 0.49: SLM land/oce frac 1.47298e+14/3.62766e+14
+										# 0.50: SLM land/oce frac 1.46903e+14/3.63161e+14; GLOB land frac 1.48128e+14											
+      [[ ${res_atm} = T127 && ${res_oce} = GLOB ]] && slm_fraction=0.49 	# 0.48: SLM land/oce frac 1.48402e+1/3.61662e+14
+										# 0.49: SLM land/oce frac 1.48123e+14/3.61941e+14
+										# 0.50: SLM land/oce frac 1.47799e+14/3.62265e+14; GLOB land frac 1.48128e+14
+
+      [[ ${res_atm} = T127 && ${res_oce} = AGUV ]] && slm_fraction=0.49 	# 0.48: SLM land/oce frac 1.49326e+14/3.60739e+14
+										# 0.49: SLM land/oce frac 1.49130e+14/3.60935e+14
+										# 0.50: SLM land/oce frac 1.48883e+14/3.61182e+14; AGUV land frac 1.4923e+14
+
+      [[ ${res_atm} = T63 && ${res_oce} = AGUV ]] && slm_fraction=0.47		# 0.47: SLM land/oce frac 1.49458e+14/3.60606e+14	
+										# 0.48: SLM land/oce frac 1.48913e+14/3.61152e+14	
+										# 0.49: SLM land/oce frac 1.48522e+14/3.61542e+14
+										# 0.50: SLM land/oce frac 1.48101e+14/3.61963e+14; AGUV land frac 1.4923e+14
+
+      [[ ${res_atm} = T63 && ${res_oce} = REF87K ]] && slm_fraction=0.49	# 0.49: SLM land/oce frac 1.53286e+14/3.56779e+14
+										# 0.50: SLM land/oce frac 1.52955e+14/3.57109e+14; REF87K land frac 1.53205e+14
+
+      [[ ${res_atm} = T127 && ${res_oce} = REF87K ]] && slm_fraction=0.50	# 0.51: SLM land/oce frac 1.53024e+14/3.5704e+14
+										# 0.50: SLM land/oce frac 1.53256e+14/3.56808e+14; REF87K land frac 1.53205e+14	
+
+      [[ ${res_atm} = T63 && ${res_oce} = LGM2 ]] && slm_fraction=0.48		# 0.48: SLM land/oce frac 1.73900e+14/3.36164e+14	
+										# 0.49: SLM land/oce frac 1.73607e+14/3.36458e+14
+										# 0.50: SLM land/oce frac 1.73371e+14/3.36694e+14; LGM2 land frac 1.73909e+14	
+
+      [[ ${res_atm} = T127 && ${res_oce} = DMIP ]] && slm_fraction=0.48		# 0.48: SLM land/oce frac 1.48481e+14/3.61583e+14	
+										# 0.49: SLM land/oce frac 1.48239e+14/3.61825e+14
+										# 0.50: SLM land/oce frac 1.48024e+14/3.62041e+14; DMIP land frac 1.48373e+14
+
+      [[ ${res_atm} = T127 && ${res_oce} = BOLD ]] && slm_fraction=0.48		# 0.48: SLM land/oce frac 1.48301e+14/3.61764e+14
+										# 0.49: SLM land/oce frac 1.48030e+14/3.62034e+14
+										# 0.50: SLM land/oce frac 1.47826e+14/3.62238e+14; BOLD land frac 1.48255e+14
+
+      [[ ${res_atm} = T255 && ${res_oce} = BOLD ]] && slm_fraction=0.49		# 0.48: SLM land/oce frac 1.48384e+14/3.61681e+14
+										# 0.49: SLM land/oce frac 1.48227e+14/3.61837e+14; BOLD land frac 1.48255e+14
+
+      [[ ${res_atm} = T63 && ${res_oce} = BOLD ]] && slm_fraction=0.47		# 0.46: SLM land/oce frac 1.48624e+14/3.61441e+14
+										# 0.47: SLM land/oce frac 1.48194e+14/3.61870e+14
+										# 0.48: SLM land/oce frac 1.47841e+14/3.62223e+14
+										# 0.49: SLM land/oce frac 1.47468e+14/3.62596e+14 
+										# 0.50: SLM land/oce frac 1.46844e+14/3.63221e+14; BOLD land frac 1.48255e+14
+
+      [[ ${res_atm} = T127 && ${res_oce} = FRON ]] && slm_fraction=0.49		# 0.48: SLM land/oce frac 1.47089e+14/3.62975e+14;
+										# 0.49: SLM land/oce frac 1.46781e+14/3.63283e+14; FRON land frac 1.46909e+14
+
+      [[ ${res_atm} = T255 && ${res_oce} = FRON ]] && slm_fraction=0.49		# 0.48: SLM land/oce frac 1.47032e+14/3.63032e+14
+										# 0.49: SLM land/oce frac 1.46890e+14/3.63175e+14; FRON land frac 1.46909e+14
+
+      [[ ${res_atm} = T63 && ${res_oce} = PIGRID ]] && slm_fraction=0.50	# 0.50: SLM land/oce frac 1.69612e+14/3.40453e+14; PIGRID land frac 1.70003e+14
+
+      [[ ${res_atm} = T127 && ${res_oce} = PIGRID ]] && slm_fraction=0.50	# 0.50: SLM land/oce frac 1.69949e+14/3.40116e+14; PIGRID land frac 1.70003e+14
+
+      [[ ${res_atm} = T31 && ${res_oce} = PIGRID ]] && slm_fraction=0.50	# 0.50: SLM land/oce frac 1.69685e+14/3.40379e+14; PIGRID land frac 1.70003e+14
+
+
       if [[ ${slm_fraction} = 0.5 ]]; then
         echo "------------------------------------------------------"
         echo "WARNING: no value for slm_fraction specified for ${res_atm} ${res_oce}."
