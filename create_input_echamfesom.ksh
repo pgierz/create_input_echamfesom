@@ -31,9 +31,9 @@ export interactive_ctrl=1
 export cplmod=asob
 
 # component model resolutions
-export res_atm=T63 	# T31,T63,T127,T255	# atmosphere horizontal resolution
-export vres_atm=L47	# L47,L95        	# atmosphere vertical resolution
-export res_oce=BOLD 	# ocean horizontal resolution (CORE2, AGUV, DMIP, BOLD, FRON, PI)
+export res_atm=T127 	# T31,T63,T127(L95),T255(L95)	# atmosphere horizontal resolution
+export vres_atm=L95	# L47,L95        		# atmosphere vertical resolution
+export res_oce=CORE2 	# ocean horizontal resolution (GLOB, CORE2, AGUV, DMIP, BOLD, FRON, PI)
 export vres_oce=L46    # ocean vertical resolution
 
 # set paths to FESOM meshes and CDO grid description files
@@ -70,7 +70,7 @@ fi
 # input data
 export pool_atm_standalone=/pool/data/ECHAM5                # pool with atm input data
 [[ ${res_atm} = T127 ]] && export pool_atm_standalone=/work/mh0081/prep/echam6
-[[ ${res_atm} = T255 ]] && export pool_atm_standalone=/work/im0454/ECHAM6
+[[ ${res_atm} = T255 ]] && export pool_atm_standalone=/work/im0454/ECHAM6 # does not exist anymore
 export pool_atm=/pool/data/ECHAM6
 export pool_oce=/pool/data/MPIOM                 # pool with oce input data
 export pool_srf=/pool/data/JSBACH                # pool with srf input data
@@ -363,7 +363,7 @@ if [[ "${srfinp}" = "yes" ]]; then
 
   # ----------------------------------------
   # cmip5-like initial file
-  export dynveg=true
+  export dynveg=false 		#true	# Input file LUH2v2h_states_T127_dynveg.nc of process selyear does not exists
   export year_ct=1850; export year_cf=1850
   export ntiles=11
   export c3c4crop=true
@@ -379,9 +379,9 @@ if [[ "${srfinp}" = "yes" ]]; then
   ${srcdir}/jsbach_init_file.ksh
 
   # ...same with no-dynveg
-  export dynveg=false
-
-  ${srcdir}/jsbach_init_file.ksh
+  #export dynveg=false
+  #
+  #${srcdir}/jsbach_init_file.ksh
 
   # ----------------------------------------
 
@@ -423,7 +423,7 @@ if [[ "${srfinp}" = "yes" ]]; then
 
   # ----------------------------------------
   # present day initial file (11 tiles)
-  export dynveg=true
+  export dynveg=false #true
   export year_ct=1976; export year_cf=1976
   export ntiles=11
   export c3c4crop=true
@@ -432,14 +432,14 @@ if [[ "${srfinp}" = "yes" ]]; then
   ${srcdir}/jsbach_init_file.ksh
 
   # ...same with no-dynveg
-  export dynveg=false
-
-  ${srcdir}/jsbach_init_file.ksh
+  #export dynveg=false
+  #
+  #${srcdir}/jsbach_init_file.ksh
   # ----------------------------------------
 
   # ----------------------------------------
   # present day initial file (11 tiles)
-  export dynveg=true
+  export dynveg=false #true
   export year_ct=1992; export year_cf=1992
   export ntiles=11
   export c3c4crop=true
@@ -447,10 +447,10 @@ if [[ "${srfinp}" = "yes" ]]; then
 
   ${srcdir}/jsbach_init_file.ksh
 
-  # ...same with no-dynveg
-  export dynveg=false
-
-  ${srcdir}/jsbach_init_file.ksh
+  ## ...same with no-dynveg
+  #export dynveg=false
+  #
+  #${srcdir}/jsbach_init_file.ksh
   # ----------------------------------------
 
   ## present day initial file (12 tiles, only glacier on first)
@@ -466,20 +466,20 @@ if [[ "${srfinp}" = "yes" ]]; then
   # ADD A CASE FOR SCENARIO, COVERTYPE AND FRACT
   # ----------------------------------------
 
-  # TR
-  export landcover_series=true	# generate a series of files with cover_types of
-                              	# year_ct and fractions from year_cf to year_cf2
-  export year_cf2=2014		# only used with landcover_series
-
-  export ntiles=11		# number of jsbach tiles
-  export dynveg=false           # setup for dynamic vegetation:
-                              	#   - cover fractions of natural vegetation included
-                              	#   - soil water capacity increased in desert areas 
-  export year_ct=1850
-  export year_cf=1850
-  export pasture_rule=true
-
-  ${srcdir}/jsbach_init_file.ksh
+  ## TR, this case works but we decided to use the MPI files since the dependence to the ocean grid was dropped
+  #export landcover_series=true	# generate a series of files with cover_types of
+  #                            	# year_ct and fractions from year_cf to year_cf2
+  #export year_cf2=2014		# only used with landcover_series
+  #
+  #export ntiles=11		# number of jsbach tiles
+  #export dynveg=false           # setup for dynamic vegetation:
+  #                            	#   - cover fractions of natural vegetation included
+  #                            	#   - soil water capacity increased in desert areas 
+  #export year_ct=1850
+  #export year_cf=1850
+  #export pasture_rule=true
+  #
+  #${srcdir}/jsbach_init_file.ksh
 
 #if [[ ${interactive} = true ]]; then
 #
