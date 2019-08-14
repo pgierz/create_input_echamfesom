@@ -31,10 +31,10 @@ export interactive_ctrl=1
 export cplmod=asob
 
 # component model resolutions
-export res_atm=T127 	# T31,T63,T127(L95),T255(L95)	# atmosphere horizontal resolution
-export vres_atm=L95	# L47,L95        		# atmosphere vertical resolution
-export res_oce=CORE2 	# ocean horizontal resolution (GLOB, CORE2, AGUV, DMIP, BOLD, FRON, PI)
-export vres_oce=L46    # ocean vertical resolution
+export res_atm=T63 #T255 	# T31,T63,T127(L95),T255(L95)	# atmosphere horizontal resolution
+export vres_atm=L47 #L95	# L47,L95        		# atmosphere vertical resolution
+export res_oce=CORE2 #ROSSBY4.2 # ocean horizontal resolution (GLOB, CORE2, AGUV, DMIP, BOLD, FRON, PI)
+export vres_oce=L46 #L80    # L46, ocean vertical resolution
 
 # set paths to FESOM meshes and CDO grid description files
 if [[ "${res_oce}" = "CORE2" ]]; then
@@ -65,18 +65,25 @@ elif [[ "${res_oce}" = "FRON" ]]; then
   #export mesh_path=/work/ab0995/a270067/fesom/fron/mesh_Agulhas/
   export mesh_path=/mnt/lustre01/work/bm0944/input/fron/
   export mesh_griddes=${mesh_path}/fesom_mesh_fron.txt.nc
+elif [[ "${res_oce}" = "ROSSBY4.2" ]]; then
+  #export mesh_path=/work/ab0995/a270067/fesom2/ros2/mesh/
+  mesh_path=/work/bm0944/a270046/ROSSBY4.2-files/
+  export mesh_griddes=/work/bm0944/a270046/ROSSBY4.2-files/rossby4.2_griddes.nc
 fi
 
 # input data
-export pool_atm_standalone=/pool/data/ECHAM5                # pool with atm input data
+export pool_atm_standalone=/pool/data/ECHAM6 #/pool/data/ECHAM5 # pool with atm input data
+[[ ${res_atm} = T63 ]] && export pool_atm_standalone=/pool/data/ECHAM5
 [[ ${res_atm} = T127 ]] && export pool_atm_standalone=/work/mh0081/prep/echam6
-[[ ${res_atm} = T255 ]] && export pool_atm_standalone=/work/im0454/ECHAM6 # does not exist anymore
-export pool_atm=/pool/data/ECHAM6
+#[[ ${res_atm} = T255 ]] && export pool_atm_standalone=/pool/data/ECHAM6/input/r0008/ #/work/im0454/ECHAM6 # does not exist anymore #/pool/data/ECHAM6/T255
+[[ ${res_atm} = T255 ]] && export pool_atm_janspec=/pool/data/ECHAM6/input/r0008/
+export pool_atm=/pool/data/ECHAM6	# /pool/data/ECHAM6/T255
 export pool_oce=/pool/data/MPIOM                 # pool with oce input data
 export pool_srf=/pool/data/JSBACH                # pool with srf input data
-[[ ${res_atm} = T255 ]] && export pool_srf=/work/im0454/JSBACH   # pool with srf input data
+#[[ ${res_atm} = T255 ]] && export pool_srf=/work/im0454/JSBACH   # pool with srf input data
 #export pool_cpl=$WRKSHR/tarfiles           # pool for created input data
-export pool_cpl=${mesh_path}/tarfiles${res_atm}_pool		# pool for created input data
+#export pool_cpl=${mesh_path}/tarfiles${res_atm}_pool		# pool for created input data
+export pool_cpl=${mesh_path}/tarfiles${res_atm}_forchris		# pool for created input data
 
 # restart data
 #restart_mpiom=""
@@ -259,6 +266,9 @@ if [[ "${atminp}" = "yes" ]]; then
 
       [[ ${res_atm} = T31 && ${res_oce} = PIGRID ]] && slm_fraction=0.50	# 0.50: SLM land/oce frac 1.69685e+14/3.40379e+14; PIGRID land frac 1.70003e+14
 
+      [[ ${res_atm} = T255 && ${res_oce} = ROSSBY4.2 ]] && slm_fraction=0.49	# 0.50: SLM land/oce frac 1.49073e+14/3.60991e+14 ; ROSSBY4.2 land frac 1.49315e+14
+  
+
 
       if [[ ${slm_fraction} = 0.5 ]]; then
         echo "------------------------------------------------------"
@@ -320,7 +330,12 @@ if [[ "${atminp}" = "yes" ]]; then
 
   for ivres_atm in ${vres_atm} ; do
     #cp -p ${pool_atm}/${res_atm}/${res_atm}${ivres_atm}_jan_spec.nc .
-    cp -p ${pool_atm_standalone}/${res_atm}/${res_atm}${ivres_atm}_jan_spec.nc .
+    if [[ ${res_atm} = T255 ]]; then
+      cp -p ${pool_atm_janspec}/${res_atm}/${res_atm}${ivres_atm}_jan_spec.nc .
+    else
+      cp -p ${pool_atm_standalone}/${res_atm}/${res_atm}${ivres_atm}_jan_spec.nc .
+    fi
+
   done
   cp -p ${pool_atm}/${res_atm}/${res_atm}_O3clim2.nc                  .
   cp -p ${pool_atm}/${res_atm}/${res_atm}_ozone_CMIP5_1850-1860.nc    .
@@ -378,11 +393,10 @@ if [[ "${srfinp}" = "yes" ]]; then
 
   ${srcdir}/jsbach_init_file.ksh
 
-  # ...same with no-dynveg
-  #export dynveg=false
-  #
-  #${srcdir}/jsbach_init_file.ksh
-
+  # ...same with dynveg
+  export dynveg=true
+  
+  ${srcdir}/jsbach_init_file.ksh
   # ----------------------------------------
 
   ## cmip5-like initial file with own tile for glaciers
@@ -467,19 +481,19 @@ if [[ "${srfinp}" = "yes" ]]; then
   # ----------------------------------------
 
   ## TR, this case works but we decided to use the MPI files since the dependence to the ocean grid was dropped
-  #export landcover_series=true	# generate a series of files with cover_types of
-  #                            	# year_ct and fractions from year_cf to year_cf2
-  #export year_cf2=2014		# only used with landcover_series
+  export landcover_series=true	# generate a series of files with cover_types of
+                              	# year_ct and fractions from year_cf to year_cf2
+  export year_cf2=2014		# only used with landcover_series
   #
-  #export ntiles=11		# number of jsbach tiles
-  #export dynveg=false           # setup for dynamic vegetation:
-  #                            	#   - cover fractions of natural vegetation included
-  #                            	#   - soil water capacity increased in desert areas 
-  #export year_ct=1850
-  #export year_cf=1850
-  #export pasture_rule=true
-  #
-  #${srcdir}/jsbach_init_file.ksh
+  export ntiles=11		# number of jsbach tiles
+  export dynveg=false           # setup for dynamic vegetation:
+                              	#   - cover fractions of natural vegetation included
+                              	#   - soil water capacity increased in desert areas 
+  export year_ct=1850
+  export year_cf=1850
+  export pasture_rule=true
+  
+  ${srcdir}/jsbach_init_file.ksh
 
 #if [[ ${interactive} = true ]]; then
 #
