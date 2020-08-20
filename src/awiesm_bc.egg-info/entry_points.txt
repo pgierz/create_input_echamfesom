@@ -1,0 +1,3 @@
+[console_scripts]
+awiesm_bc = awiesm_bc.cli:main
+
