@@ -1,8 +1,0 @@
-README.md
-setup.py
-awiesm_bc.egg-info/PKG-INFO
-awiesm_bc.egg-info/SOURCES.txt
-awiesm_bc.egg-info/dependency_links.txt
-awiesm_bc.egg-info/not-zip-safe
-awiesm_bc.egg-info/top_level.txt
-src/__init__.py
