@@ -58,6 +58,52 @@ def _has_nc_config():
     return _has_prog("nc-config")
 
 
+def _default_netcdf_fflags():
+    """
+    Provides the default ``FORTRAN`` compiler flags if nc-config is installed,
+    otherwise falls back to the default. If nothing is specified, the default
+    is an empty string.
+
+    Parameters
+    ----------
+    default : str
+        Which compiler to fall back to
+
+    Returns
+    -------
+    str :
+        The flags that should be the default for ``NetCDF``
+    """
+    if _has_nc_config():
+        ret_val = subprocess.check_output("nc-config --fflags", shell=True)
+        return ret_val.decode().strip()
+    else:
+        return ""
+
+
+def _default_netcdf_flibs():
+    """
+    Provides the default ``FORTRAN`` compiler libraries if nc-config is
+    installed, otherwise falls back to the default. If nothing is specified,
+    the default is an empty string
+
+    Parameters
+    ----------
+    default : str
+        Which compiler to fall back to
+
+    Returns
+    -------
+    str :
+        The libraries that should be the default for ``NetCDF``
+    """
+    if _has_nc_config():
+        ret_val = subprocess.check_output("nc-config --flibs", shell=True)
+        return ret_val.decode().strip()
+    else:
+        return ""
+
+
 def _default_netcdf_fc(default="gfortran"):
     """
     Provides the default ``FORTRAN`` compiler for ``NetCDF`` if nc-config is
@@ -92,6 +138,18 @@ class AppConfig(RequiredConfigMixin):
         "fc",
         default=_default_netcdf_fc(),
         doc="Which ``FORTRAN`` compiler to use for the ``jsbach_init_file`` program",
+        namespace="jsbach_init_file",
+    )
+    required_config.add_option(
+        "flibs",
+        default=_default_netcdf_flibs(),
+        doc="Which ``FORTRAN`` libraries to use for the ``jsbach_init_file`` program",
+        namespace="jsbach_init_file",
+    )
+    required_config.add_option(
+        "fflags",
+        default=_default_netcdf_fflags(),
+        doc="Which ``FORTRAN`` flags to use for the ``jsbach_init_file`` program",
         namespace="jsbach_init_file",
     )
 
