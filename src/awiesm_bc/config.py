@@ -34,6 +34,7 @@ import xdg.BaseDirectory
 
 import pathlib
 import os
+import subprocess
 
 
 CONFIG_FILES = [
@@ -43,21 +44,55 @@ CONFIG_FILES = [
 List of files where configuration information is searched for
 """
 
+def _has_prog(prog):
+    """Checks if ``prog`` is available via ``$ which <prog>``"""
+    try:
+        subprocess.check_output(f"which {prog}", shell=True)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
+def _has_nc_config():
+    """True/False if the system has nc-config"""
+    return _has_prog("nc-config")
+
+
+def _default_netcdf_fc(default="gfortran"):
+    """
+    Provides the default ``FORTRAN`` compiler for ``NetCDF`` if nc-config is
+    installed, otherwise falls back to the default. If nothing is specified,
+    the default is ``gfortran``
+
+    Parameters
+    ----------
+    default : str
+        Which compiler to fall back to
+
+    Returns
+    -------
+    str :
+        The compiler that should be the default for ``NetCDF``
+    """
+    if _has_nc_config():
+        ret_val = subprocess.check_output("nc-config --fc", shell=True)
+        return ret_val.decode().strip()
+    else:
+        return default
+
 
 class AppConfig(RequiredConfigMixin):
     """Contains the defaults for the awiesm_bc configuration"""
 
-    config = ConfigOptions()
-    config.add_option(
+    required_config = ConfigOptions()
+    required_config.add_option(
         "debug", parser=bool, default="false", doc="Switch debug mode on and off."
     )
-    config.add_option(
+    required_config.add_option(
         "fc",
-        namespace="jsbach_init_file",
-        parser=str,
-        default="gfortran",
-        alternative_key="fortran_compiler",
+        default=_default_netcdf_fc(),
         doc="Which ``FORTRAN`` compiler to use for the ``jsbach_init_file`` program",
+        namespace="jsbach_init_file",
     )
 
 
@@ -67,8 +102,8 @@ def get_config(config_file=None):
     Loads either the user supplied configuration, the configuration in the XDG
     path, or the default config. Configuration may be given incompletely, so if
     you only supply the color (for example), other configuration values are
-    taken from the defaults. The user can also supply a configuration as a
-    dictionary as an argument to this function, this takes first priority.
+    taken from the defaults. The user can also supply a configuration stored in
+    a yaml file as an argument to this function, this takes first priority.
 
     Parameters
     ----------
@@ -85,13 +120,13 @@ def get_config(config_file=None):
     environments = [
         # Look in OS process environment first
         ConfigOSEnv(),
-        # Look in YAML files in order specified
+        # Look in YAML files in order specified (CONFIG_FILES is a list)
         ConfigYamlEnv(CONFIG_FILES),
     ]
     if config_file:
         # Add the user supplied configuration file to the front of the list if
         # it was given:
-        environments.insert(0, config_file)
+        environments.insert(0, ConfigYamlEnv(config_file))
     manager = ConfigManager(
         # Specify one or more configuration environments in
         # the order they should be checked
